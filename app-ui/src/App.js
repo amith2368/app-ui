@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import logo from './logo.svg';
 import './App.css';
+import BasicConnection from "./components/BasicConnection";
 
 function App() {
 
@@ -19,7 +20,7 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
+      {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Message: {response}
@@ -32,7 +33,8 @@ function App() {
         >
           Learn React
         </a>
-      </header>
+      </header> */}
+      <BasicConnection />
     </div>
   );
 }
