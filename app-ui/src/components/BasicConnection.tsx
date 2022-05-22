@@ -6,7 +6,7 @@ import createEngine, {
 	DefaultLinkModel,
 	DefaultLinkWidget
 } from '@projectstorm/react-diagrams';
-import { LinkModelListener, LinkWidget, PointModel } from '@projectstorm/react-diagrams-core';
+import { LinkWidget, PointModel } from '@projectstorm/react-diagrams-core';
 import * as React from 'react';
 import '../App.css';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
@@ -143,7 +143,7 @@ export class AdvancedLinkFactory extends DefaultLinkFactory {
 }
 
 
-export default () => {
+export default function BasicConnection() {
 
     function sendMockData(source, target, isConnected) {
 
@@ -151,37 +151,35 @@ export default () => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({})
-        }
+        };
 
-        if(target === null) {
+        if (target === null) {
             requestOptions = {
                 ...requestOptions,
                 body: JSON.stringify({
                     "components": [
                         {
-                            "id": source.id,      
-                            "name": source.name, 
+                            "id": source.id,
+                            "name": source.name,
                         },
-    
                     ],
                     "links": []
                 })
-            }
+            };
         }
-        else if(isConnected === true) {
+        else if (isConnected === true) {
             requestOptions = {
                 ...requestOptions,
                 body: JSON.stringify({
                     "components": [
                         {
-                            "id": source.id,     
-                            "name": source.name, 
+                            "id": source.id,
+                            "name": source.name,
                         },
                         {
-                            "id": target.id,      
-                            "name": target.name, 
+                            "id": target.id,
+                            "name": target.name,
                         }
-    
                     ],
                     "links": [
                         {
@@ -190,25 +188,24 @@ export default () => {
                         }
                     ]
                 })
-            }
+            };
         } else {
             requestOptions = {
                 ...requestOptions,
                 body: JSON.stringify({
                     "components": [
                         {
-                            "id": source.id,      
-                            "name": source.name, 
+                            "id": source.id,
+                            "name": source.name,
                         },
                         {
-                            "id": target.id,      
-                            "name": target.name, 
+                            "id": target.id,
+                            "name": target.name,
                         }
-    
                     ],
                     "links": []
                 })
-            }
+            };
         }
 
         fetch('/api/state/cache', requestOptions)
@@ -217,44 +214,44 @@ export default () => {
     }
 
 
-	var engine = createEngine();
-	engine.getLinkFactories().registerFactory(new AdvancedLinkFactory());
+    var engine = createEngine();
+    engine.getLinkFactories().registerFactory(new AdvancedLinkFactory());
 
 
 
 
-	var node1 = new DefaultNodeModel('Source 1', 'rgb(255, 25, 0)');
-	let port1 = node1.addPort(new AdvancedPortModel(false, 'out'));
-	node1.setPosition(100, 100);
+    var node1 = new DefaultNodeModel('Source 1', 'rgb(255, 25, 0)');
+    let port1 = node1.addPort(new AdvancedPortModel(false, 'out'));
+    node1.setPosition(100, 100);
 
-	var node2 = new DefaultNodeModel('Target 1', 'rgb(255, 221, 0)');
-	var port2 = node2.addPort(new AdvancedPortModel(true, 'in'));
-	node2.setPosition(500, 350);
+    var node2 = new DefaultNodeModel('Target 1', 'rgb(255, 221, 0)');
+    var port2 = node2.addPort(new AdvancedPortModel(true, 'in'));
+    node2.setPosition(500, 350);
 
-	var node3 = new DefaultNodeModel('Source 2', 'rgb(0,192,255)');
-	let port3 = node3.addPort(new AdvancedPortModel(false, 'out'));
-	node3.setPosition(100, 500);
+    var node3 = new DefaultNodeModel('Source 2', 'rgb(0,192,255)');
+    let port3 = node3.addPort(new AdvancedPortModel(false, 'out'));
+    node3.setPosition(100, 500);
 
-	var node4 = new DefaultNodeModel('Target 2', 'rgb(192,255,0)');
-	var port4 = node4.addPort(new AdvancedPortModel(true, 'in'));
-	node4.setPosition(500, 450);
+    var node4 = new DefaultNodeModel('Target 2', 'rgb(192,255,0)');
+    var port4 = node4.addPort(new AdvancedPortModel(true, 'in'));
+    node4.setPosition(500, 450);
 
-	var model = new DiagramModel();
+    var model = new DiagramModel();
 
-	model.addAll(port1.link(port2));
+    model.addAll(port1.link(port2));
 
-	// add everything else
-	model.addAll(node1, node2, node3, node4);
+    // add everything else
+    model.addAll(node1, node2, node3, node4);
 
     model.registerListener({
         linksUpdated: (event) => {
-            if(event.firing === true && event.isCreated === true ) { 
+            if (event.firing === true && event.isCreated === true) {
                 const source: any = event.link.getSourcePort().getNode().getOptions();
                 // const target: any = event.link.getTargetPort().getParent().getOptions();
                 sendMockData(source, null, true);
-                
+
             }
-            if(event.isCreated === false ) {
+            if (event.isCreated === false) {
                 const source: any = deletedSource.getNode().getOptions();
                 const target: any = deletedTarget.getNode().getOptions();
                 sendMockData(source, target, false);
@@ -264,21 +261,21 @@ export default () => {
                     const source: any = event.entity.getSourcePort().getNode().getOptions();
                     const target: any = event.entity.getTargetPort().getNode().getOptions();
                     sendMockData(source, target, true);
-               }
-           })
+                }
+            });
         }
     });
 
-    
 
-	// load model into engine
-	engine.setModel(model);
 
-	// render the diagram!
-	return (
-		<CustomCanvasWidget>
-			<CanvasWidget engine={engine} />
-		</CustomCanvasWidget>
-	);
+    // load model into engine
+    engine.setModel(model);
+
+    // render the diagram!
+    return (
+        <CustomCanvasWidget>
+            <CanvasWidget engine={engine} />
+        </CustomCanvasWidget>
+    );
 };
 

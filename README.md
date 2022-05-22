@@ -47,3 +47,5 @@ Note:
 Now go to the [Local Server](http://localhost:3000/) to view the UI Connector
 
 ![The UI Connector Page](/main.png)
+&nbsp;&nbsp;
+![The UI Connector API calls](/mockapi.png)
