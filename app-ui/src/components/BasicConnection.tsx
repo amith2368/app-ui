@@ -19,15 +19,6 @@ export class AdvancedLinkModel extends DefaultLinkModel {
 			width: 4
 		});
 	}
-
-    remove() { 
-        if (this.sourcePort) { 
-            this.sourcePort.removeLink(this); 
-        } if (this.targetPort) { 
-            this.targetPort.removeLink(this); 
-        } 
-        super.remove();  
-    }
 }
 
 export class AdvancedPortModel extends DefaultPortModel {
@@ -168,7 +159,7 @@ export default () => {
 
     model.registerListener({
         linksUpdated: (event) => {
-            if(event.firing === true) { 
+            if(event.firing === true && event.isCreated === true ) { 
                 console.log('Link Updated');
             }
             if(event.isCreated === false ) {
