@@ -60,8 +60,8 @@ export class CustomCanvasWidget extends React.Component<CanvasWidgetProps> {
 			<>
 				<Global styles={S.Expand} />
 				<S.Container
-					background={this.props.background || 'rgb(60, 60, 60)'}
-					color={this.props.color || 'rgba(255,255,255, 0.05)'}>
+					background={this.props.background || 'rgb(225, 225, 225)'}
+					color={this.props.color || 'rgba(255,255,255, 0.5)'}>
 					{this.props.children}
 				</S.Container>
 			</>
