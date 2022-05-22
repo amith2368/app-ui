@@ -38,8 +38,8 @@
 }
 
 .canvas{
-  background-color: rgb(70, 67, 67);
   height: 100vh;
   width:100%;
   /* overflow:inherit !important; */
 }
+
