@@ -8,6 +8,11 @@ app.get('/api/hello', (req, res) => {
   res.send({ message: 'Mock Server'});
 })
 
+app.post('/api/state/cache', (req, res) => {
+  console.log(req.body);
+  res.sendStatus(201);
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })

@@ -9,8 +9,10 @@ import createEngine, {
 import { LinkModelListener, LinkWidget, PointModel } from '@projectstorm/react-diagrams-core';
 import * as React from 'react';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
-import { DemoCanvasWidget } from './DemoCanvasWidget';
+import { CustomCanvasWidget } from './CanvasWidget';
 import { MouseEvent } from 'react';
+
+let deletedSource, deletedTarget;
 
 export class AdvancedLinkModel extends DefaultLinkModel {
 	constructor() {
@@ -19,6 +21,22 @@ export class AdvancedLinkModel extends DefaultLinkModel {
 			width: 4
 		});
 	}
+    remove(): void {
+        
+        if (this.sourcePort) {
+            deletedSource = this.sourcePort;
+            this.sourcePort.remove();
+            this.sourcePort = null;
+        }
+        if (this.targetPort) {
+            deletedTarget = this.targetPort;
+            this.targetPort.remove();
+            this.targetPort = null;
+        }
+        super.remove();
+            
+    }
+
 }
 
 export class AdvancedPortModel extends DefaultPortModel {
@@ -125,6 +143,78 @@ export class AdvancedLinkFactory extends DefaultLinkFactory {
 
 
 export default () => {
+
+    function sendMockData(source, target, isConnected) {
+
+        let requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+        }
+
+        if(target === null) {
+            requestOptions = {
+                ...requestOptions,
+                body: JSON.stringify({
+                    "components": [
+                        {
+                            "id": source.id,      // unique identifier for first box created
+                            "name": source.name, // name of the box/component
+                        },
+    
+                    ],
+                    "links": []
+                })
+            }
+        }
+        else if(isConnected === true) {
+            requestOptions = {
+                ...requestOptions,
+                body: JSON.stringify({
+                    "components": [
+                        {
+                            "id": source.id,      // unique identifier for first box created
+                            "name": source.name, // name of the box/component
+                        },
+                        {
+                            "id": target.id,      // unique identifier for second box created
+                            "name": target.name, // name of the box/component
+                        }
+    
+                    ],
+                    "links": [
+                        {
+                            "src": source.id,
+                            "dest": target.id
+                        }
+                    ]
+                })
+            }
+        } else {
+            requestOptions = {
+                ...requestOptions,
+                body: JSON.stringify({
+                    "components": [
+                        {
+                            "id": source.id,      // unique identifier for first box created
+                            "name": source.name, // name of the box/component
+                        },
+                        {
+                            "id": target.id,      // unique identifier for second box created
+                            "name": target.name, // name of the box/component
+                        }
+    
+                    ],
+                    "links": []
+                })
+            }
+        }
+
+        fetch('/api/state/cache', requestOptions)
+            .then(response => response.json())
+            .then(data => console.log(data));
+    }
+
 	//1) setup the diagram engine
 	var engine = createEngine();
 	engine.getLinkFactories().registerFactory(new AdvancedLinkFactory());
@@ -160,16 +250,21 @@ export default () => {
     model.registerListener({
         linksUpdated: (event) => {
             if(event.firing === true && event.isCreated === true ) { 
-                console.log('Link Updated');
+                const source: any = event.link.getSourcePort().getNode().getOptions();
+                // const target: any = event.link.getTargetPort().getParent().getOptions();
+                sendMockData(source, null, true);
+                
             }
             if(event.isCreated === false ) {
-                console.log('Link deleted');
+                const source: any = deletedSource.getNode().getOptions();
+                const target: any = deletedTarget.getNode().getOptions();
+                sendMockData(source, target, false);
             }
             event.link.registerListener({
                 targetPortChanged: (event) => {
-                    const target: any = event.entity.getTargetPort().getParent().getOptions()
-                    console.log('Link created');
-                    console.log(target.name);
+                    const source: any = event.entity.getSourcePort().getNode().getOptions();
+                    const target: any = event.entity.getTargetPort().getNode().getOptions();
+                    sendMockData(source, target, true);
                }
            })
         }
@@ -182,9 +277,9 @@ export default () => {
 
 	// render the diagram!
 	return (
-		<DemoCanvasWidget>
+		<CustomCanvasWidget>
 			<CanvasWidget engine={engine} />
-		</DemoCanvasWidget>
+		</CustomCanvasWidget>
 	);
 };
 
