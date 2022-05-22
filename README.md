@@ -3,7 +3,7 @@
 A UI connector application implemented using React framework along with [React Diagrams](https://github.com/projectstorm/react-diagrams) library
 
 
-# Requirements![enter image description here](https://ibb.co/3TwbPXP)
+# Requirements
 
  - Operating System: Windows with Ubuntu WSL2, Linux (recommended)
  - JavaScript version: ES6 (Chrome & Safari)
@@ -47,5 +47,5 @@ Note:
 Now go to the [Local Server](http://localhost:3000/) to view the UI Connector
 
 ![The UI Connector Page](/main.png)
-&nbsp;&nbsp;
+
 ![The UI Connector API calls](/mockapi.png)
