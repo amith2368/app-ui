@@ -1,4 +1,4 @@
-# Take Home Exercise - UI Connector
+# Local UI Connector Tool
 
 A UI connector application implemented using React framework along with [React Diagrams](https://github.com/projectstorm/react-diagrams) library
 
